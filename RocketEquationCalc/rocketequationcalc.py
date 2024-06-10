@@ -1,4 +1,3 @@
-import numpy
 from os import system
 def rocketequation_deltav(exhaust: float, startmass: float,finalmass: float):
 	deltav = exhaust * numpy.log( startmass / finalmass )
