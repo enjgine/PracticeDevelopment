@@ -9,10 +9,12 @@ for i in range(0,987):
     test = series[i:i+13]
     # Reset test checker
     testnum = 1
+
     # Multiply test checker by each num in 13
     for x in test:
         x = int(x)
         testnum *= x
+        
     # Test current against max
     maxval = max(maxval, testnum)
 print(maxval)
