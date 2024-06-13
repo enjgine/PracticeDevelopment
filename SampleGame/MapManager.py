@@ -46,7 +46,7 @@ class MapManager():
 
 	def find_map_edges(self,y,x,z=False):
 		if z == False:
-			return {0:self.map,[z][y-1][x],1:self.map[z][y][x+1],2:self.map[z][y+1][x],3:self.map[z][y][x-1]}
+			return {0:self.map[z][y-1][x],1:self.map[z][y][x+1],2:self.map[z][y+1][x],3:self.map[z][y][x-1]}
 		else:
 			return {0:self.map[z][y-1][x],1:self.map[z][y][x+1],2:self.map[z][y+1][x],3:self.map[z][y][x-1],4:self.map[z+1][y][x],5:self.map[z-1][y][x]}
 
