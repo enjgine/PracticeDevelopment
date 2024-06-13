@@ -1,7 +1,7 @@
 # Import map layout from CSV and export to CSV
 import csv, json
 
-# =========================================================================================================D
+# 8=========================================================================================================D
 
 class MapManager():
 
@@ -34,8 +34,8 @@ class MapManager():
 			self.map.append(layer)
 
 
-	def return_map_val(self,y,x):
-		return self.map[y][x]
+	def return_map_val(self,y,x,z=1):
+		return self.map[z][y][x]
 
 
 	def set_map_val(self,z,y,x,val):
@@ -43,14 +43,16 @@ class MapManager():
 			raise Exception("Boundary reached, value not set")
 		self.map[z][y][x] = val
 
+	def get_map_size(self):
+		return len(self.map)-1 , len(self.map[0])-1 , len(self.map[0][0])-1
 
-	def find_map_edges(self,y,x,z=False):
+	def find_neighbours(self,y,x,z=False):
 		if z == False:
 			return {0:self.map[z][y-1][x],1:self.map[z][y][x+1],2:self.map[z][y+1][x],3:self.map[z][y][x-1]}
 		else:
 			return {0:self.map[z][y-1][x],1:self.map[z][y][x+1],2:self.map[z][y+1][x],3:self.map[z][y][x-1],4:self.map[z+1][y][x],5:self.map[z-1][y][x]}
 
-# =========================================================================================================D
+# 8=========================================================================================================D
 
 class TerrainMapManager(MapManager):
 
@@ -67,6 +69,14 @@ class TerrainMapManager(MapManager):
 				for x in range(len(self.map[z][y])):
 					if z == zlim or x == xlim or y == ylim or z == 0 or x == 0 or y == 0:
 						self.map[z][y][x] = self.boundaryid
+
+# 8=========================================================================================================D
+
+class ObjectMapManager(MapManager):
+
+	def __init__(self, TerrainParent):
+		self.map = self.create_map(TerrainParent.get_map_size())
+		self.boundaryid = TerrainParent.boundaryid
 
 
 
