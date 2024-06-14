@@ -1,4 +1,3 @@
-# Import map layout from CSV and export to CSV
 import json
 
 # 8=========================================================================================================D
@@ -10,23 +9,18 @@ class MapManager():
 		self.boundaryid = boundaryid
 
 
-	def save_map(self):
-		if hasattr(self,"file"):
-			json.dump(self.map,open(self.file,'w'))
-		else:
-			self.file = input("Enter file name: ")
-			json.dump(self.map,open(self.file,'w'))
-		return self.file
+	def save_map(self,file):
+		json.dump(self.map,open(file,'w+'))
 
 
 	def load_map(self,file):
-		self.file = file
-		self.map = json.load(open(self.file,'r'))
+		self.map = json.load(open(file,'r'))
 
 
 	def create_map(self,xlen,ylen,zlen=3,blankval=1):
 		try:
 			if len(self.map) != 0:
+				print(self.map)
 				raise Exception("Map is not empty (MapManager)")
 		except AttributeError:
 			self.map = []
@@ -39,6 +33,7 @@ class MapManager():
 				layer.append(row)
 			self.map.append(layer)
 
+
 	def return_map_val(self,x,y,z=1):
 		return self.map[z][y][x]
 
@@ -48,8 +43,10 @@ class MapManager():
 			raise Exception("Boundary reached, value not set (MapManager)")
 		self.map[z][y][x] = val
 
+
 	def get_map_size(self):
 		return len(self.map[0][0]) , len(self.map[0]) , len(self.map)
+
 
 	def find_neighbours(self,y,x,z=False):
 		if z == False:
@@ -79,13 +76,10 @@ class TerrainMapManager(MapManager):
 class ObjectMapManager(MapManager):
 
 	def __init__(self, TerrainParent):
-		self.create_map(*TerrainParent.get_map_size())
 		self.boundaryid = TerrainParent.boundaryid
 		self.TerrainParent = TerrainParent
-	
-	def check_loc(self,x,y,z=1):
-		return self.map[z][y][x]
-	
+
+
 	def put_obj(self,object,x,y,z=1):
 		if self.map[z][y][x] != 0 and object != 0:
 			raise Exception("Space is occupied (ObjectMapManager)")
@@ -94,6 +88,24 @@ class ObjectMapManager(MapManager):
 			return f"{object} placed at {z},{y}.{x}"
 		else:
 			raise Exception("Cannot place on boundary (ObjectMapManager)")
+
+
+	def create_map(self,blankval=1):
+		try:
+			if len(self.map) != 0:
+				print(self.map)
+				raise Exception("Map is not empty (MapManager)")
+		except AttributeError:
+			self.map = []
+		xlen,ylen,zlen = self.TerrainParent.get_map_size()
+		for z in range(zlen):
+			layer = []
+			for y in range(ylen):
+				row = []
+				for x in range(xlen):
+					row.append(blankval)
+				layer.append(row)
+			self.map.append(layer)
 
 
 

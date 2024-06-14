@@ -1,4 +1,6 @@
 from os import system
+import numpy
+
 def rocketequation_deltav(exhaust: float, startmass: float,finalmass: float):
 	deltav = exhaust * numpy.log( startmass / finalmass )
 	return(deltav)
@@ -16,13 +18,13 @@ while True:
 	match int(input("Find:\n 1: Delta-V \n 2: Starting Mass \n 3: Final Mass \n 4: Exit \n")):
 		case 1:
 			print(rocketequation_deltav(float(input("Exhaust Speed:")), float(input("Starting Mass:")), float(input("Final Mass:"))))
-			input()
+			input("Enter to continue")
 		case 2:
 			print(rocketequation_startmass(float(input("Delta-V:")), float(input("Exhaust Speed:")), float(input("Final Mass:"))))
-			input()
+			input("Enter to continue")
 		case 3:
 			print(rocketequation_finalmass(float(input("Delta-V:")), float(input("Exhaust Speed:")), float(input("Start Mass:"))))
-			input()
+			input("Enter to continue")
 		case _:
 			input("The code has ended")
 			break

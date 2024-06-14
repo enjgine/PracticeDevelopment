@@ -1,18 +1,13 @@
-import MapManager
+import MapManager, CharacterManager, FileManager
 
-def map_printer(map,z):
+""" def map_printer(map,z):
 
 	for y in range(map.get_map_size()[1]):
 		ylayer = []
 		for x in range(map.get_map_size()[0]):
 			ylayer.append(map.return_map_val(x,y,z))
-		print(ylayer)
+		print(ylayer) """
 
-TerrainMap = MapManager.TerrainMapManager(0)
-TerrainMap.create_map(10,10)
+File = FileManager.FileManager("test")
+File.file_menu()
 
-map_printer(TerrainMap,1)
-
-TerrainMap.set_terrain_boundary()
-
-map_printer(TerrainMap,1)
