@@ -1,5 +1,5 @@
 # Import map layout from CSV and export to CSV
-import csv, json
+import json
 
 # 8=========================================================================================================D
 
@@ -10,41 +10,46 @@ class MapManager():
 		self.boundaryid = boundaryid
 
 
-	def save_map(self,file):
-		self.__file_name = file
-		json.dump(self.map,open(file,'w'))
+	def save_map(self):
+		if hasattr(self,"file"):
+			json.dump(self.map,open(self.file,'w'))
+		else:
+			self.file = input("Enter file name: ")
+			json.dump(self.map,open(self.file,'w'))
+		return self.file
 
 
 	def load_map(self,file):
-		self.__file_name = file
-		self.map = json.load(open(file,'r'))
+		self.file = file
+		self.map = json.load(open(self.file,'r'))
 
 
-	def create_map(self,zlen,ylen,xlen):
-		if len(self.map) != 0:
-			raise Exception("Map is not empty")
-		self.map = []
+	def create_map(self,xlen,ylen,zlen=3,blankval=1):
+		try:
+			if len(self.map) != 0:
+				raise Exception("Map is not empty (MapManager)")
+		except AttributeError:
+			self.map = []
 		for z in range(zlen):
 			layer = []
 			for y in range(ylen):
 				row = []
 				for x in range(xlen):
-					row.append(0)
+					row.append(blankval)
 				layer.append(row)
 			self.map.append(layer)
 
-
-	def return_map_val(self,y,x,z=1):
+	def return_map_val(self,x,y,z=1):
 		return self.map[z][y][x]
 
 
-	def set_map_val(self,z,y,x,val):
+	def set_map_val(self,val,x,y,z=1):
 		if self.map[z][y][x] == self.boundaryid:
-			raise Exception("Boundary reached, value not set")
+			raise Exception("Boundary reached, value not set (MapManager)")
 		self.map[z][y][x] = val
 
 	def get_map_size(self):
-		return len(self.map)-1 , len(self.map[0])-1 , len(self.map[0][0])-1
+		return len(self.map[0][0]) , len(self.map[0]) , len(self.map)
 
 	def find_neighbours(self,y,x,z=False):
 		if z == False:
@@ -58,11 +63,10 @@ class TerrainMapManager(MapManager):
 
 	def set_terrain_boundary(self):
 		if len(self.map) == 0:
-			raise Exception("Map is empty, no limits to set")
+			raise Exception("Map is empty, no limits to set (TerrainMapManager)")
 
-		zlim = len(self.map) - 1
-		ylim = len(self.map[0]) - 1
-		xlim = len(self.map[0][0]) - 1
+		xlim , ylim , zlim = self.get_map_size()
+		xlim , ylim , zlim = xlim-1 , ylim-1 , zlim-1
 		
 		for z in range(len(self.map)):
 			for y in range(len(self.map[z])):
@@ -75,27 +79,28 @@ class TerrainMapManager(MapManager):
 class ObjectMapManager(MapManager):
 
 	def __init__(self, TerrainParent):
-		self.map = self.create_map(TerrainParent.get_map_size())
+		self.create_map(*TerrainParent.get_map_size())
 		self.boundaryid = TerrainParent.boundaryid
+		self.TerrainParent = TerrainParent
+	
+	def check_loc(self,x,y,z=1):
+		return self.map[z][y][x]
+	
+	def put_obj(self,object,x,y,z=1):
+		if self.map[z][y][x] != 0 and object != 0:
+			raise Exception("Space is occupied (ObjectMapManager)")
+		elif self.TerrainParent.return_map_val(x,y,z) != self.boundaryid:
+			self.map[z][y][x] = object
+			return f"{object} placed at {z},{y}.{x}"
+		else:
+			raise Exception("Cannot place on boundary (ObjectMapManager)")
 
 
 
 
-CurrentMap = MapManager(999)
-
-CurrentMap.create_map(5,5,5)
-CurrentMap.set_map_val(1,3,3,[7,3,5])
-
-CurrentMap.save_map("SampleGame/TestMap.csv")
-
-CurrentMap = None
-
-CurrentMap = TerrainMapManager(999)
-
-CurrentMap.load_map("SampleGame/TestMap.csv")
-
-CurrentMap.set_terrain_boundary()
-
-print(CurrentMap.map)
-
-CurrentMap.save_map("SampleGame/TestMap.csv")
+""" Terrain = TerrainMapManager(999)
+Terrain.create_map(10,10,3)
+Terrain.set_terrain_boundary()
+ObjectMap = ObjectMapManager(Terrain)
+Terrain.set_map_val(99,5,5)
+ObjectMap.put_obj(121,4,4) """
