@@ -8,14 +8,13 @@ def main():
 
 	pygame.display.set_caption('Before The After The Fall Of The Before')
 	pygame.display.set_icon(pygame.image.load("32x32.png"))
-	screen = pygame.display.set_mode((920,740),pygame.HWSURFACE)
-	FramePerSec = pygame.time.Clock()
-	FPS = 60
+	screen = pygame.display.set_mode((32*40,32*30),pygame.HWSURFACE)
+	clock = pygame.time.Clock()
+	FPS = 10
 
-	all_sprites = pygame.sprite.Group()
-	person = terrain.Terrain()
-	all_sprites.add(person)
-	pygame.display.set_icon(pygame.image.load("32x32.png"))
+	terrainblock = terrain.Terrain()
+	all_sprites = []
+	all_sprites.append(terrainblock)
 
 	while True:
 		for event in pygame.event.get():
@@ -28,7 +27,7 @@ def main():
 			screen.blit(entity.surf, entity.rect)
 
 		pygame.display.update()
-		FramePerSec.tick(FPS)
+		clock.tick(FPS)
 
 
 
