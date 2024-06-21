@@ -1,6 +1,22 @@
-pathlist = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
-for y in range(5):
-    for x in range(5):
-        if x == 0 or y == 0:
-            pathlist[y][x] = 1
-print(pathlist)
+import time
+starttimer = time.time_ns()/1000000
+
+dicttest = {}
+
+for i in range(1,1000000):
+    for x in range(1,10):
+        dicttest[i] = x
+
+endtimer = (time.time_ns()/1000000)-starttimer
+print(endtimer)
+
+starttimer = time.time_ns()/1000000
+
+mathtest = 0
+
+for i in range(1,1000000):
+    for x in range(1,10):
+        mathtest += x
+
+endtimer = (time.time_ns()/1000000)-starttimer
+print(endtimer)
